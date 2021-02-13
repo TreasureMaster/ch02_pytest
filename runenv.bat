@@ -1,0 +1,1 @@
+ch02/Scripts/activate.bat

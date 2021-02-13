@@ -1,0 +1,11 @@
+include LICENSE
+exclude *.bat
+
+# Exclude dirs
+prune .pytest_cache
+prune .vscode
+prune ch02
+
+# Tests
+recursive-include tests *.py
+
