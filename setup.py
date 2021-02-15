@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='tasks',
-    version='0.1.4.dev2',
+    version='0.1.4.dev3',
     license='proprietary',
     description='Minimal Projecy Task Manager',
 

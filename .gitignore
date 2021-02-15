@@ -51,6 +51,7 @@ __pycache__/
 dist/
 tasks.egg-info/
 runm02.bat
+runc*.bat
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode
 
