@@ -50,6 +50,7 @@ dist/
 tasks.egg-info/
 runm02.bat
 runc*.bat
+pyiniread.py
 
 # venv dirs
 ch*/
