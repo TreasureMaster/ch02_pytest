@@ -42,8 +42,6 @@ $RECYCLE.BIN/
 
 # Project exclude
 build/
-ch02/
-m02/
 .pytest_cache/
 __pycache__/
 *.pyc
@@ -52,6 +50,10 @@ dist/
 tasks.egg-info/
 runm02.bat
 runc*.bat
+
+# venv dirs
+ch*/
+m02/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode
 

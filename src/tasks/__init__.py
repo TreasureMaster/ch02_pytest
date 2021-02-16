@@ -3,6 +3,7 @@
 from .api import (  # noqa: F401
     Task,
     TasksException,
+    UninitializedDatabase,
     add,
     get,
     list_tasks,

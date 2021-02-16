@@ -2,7 +2,7 @@
 
 import pytest
 import tasks
-from tasks import Task
+from tasks import Task, UninitializedDatabase
 
 
 # tmpdir является областью действия функции, tmpdir_factory - сеанса
@@ -77,3 +77,24 @@ def db_with_multi_per_owner(tasks_db, tasks_mult_per_owner):
     """Подключение БД с 9 задачами, 3 пользователями по 3 задачи у каждого."""
     for t in tasks_mult_per_owner:
         tasks.add(t)
+
+
+# Хук pytest, добавляющий команду, разрешающую нижеследующие хуки
+def pytest_addoption(parser):
+    """Включает nice функцию с опцией --nice."""
+    group = parser.getgroup('nice')
+    group.addoption('--nice', action='store_true', help='nice: turn failures into opportunities')
+
+# WARNING глобальная pytest.config удалена в pytest 5.0.0 (пока не будем исследовать замену из-за нехватки времени)
+# Хук pytest для изменения заголовка теста
+def pytest_report_header():
+    """Благодарность тестеру за выполнение тестов."""
+    if pytest.config.getoption('nice'):
+        return "Thanks for running the tests."
+
+# Хук pytest для изменения вывода информации о тесте с F на О, например
+def pytest_report_teststatus(report):
+    """Превращает неудачи в возможности."""
+    if report.when == 'call':
+        if report.failed and pytest.config.getoption('nice'):
+            return (report.outcome, 'O', 'OPPORTUNITY for improvement')

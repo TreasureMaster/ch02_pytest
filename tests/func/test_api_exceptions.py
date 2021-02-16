@@ -2,6 +2,7 @@
 
 import pytest
 import tasks
+from tasks import Task
 
 
 def test_add_raises():
@@ -50,3 +51,18 @@ class TestUpdate():
         """non-Task задача должна поднять exception."""
         with pytest.raises(TypeError):
             tasks.update(task_id=1, task='not a task')
+
+
+@pytest.mark.usefixtures('tasks_db')
+class TestAdd():
+    """Тесты, связанные с tasks.add()."""
+
+    def test_missing_summary(self):
+        """Следует поднять исключение, если параметр summary отсутсвует."""
+        with pytest.raises(ValueError):
+            tasks.add(Task(owner='bob'))
+
+    def test_done_not_bool(self):
+        """Должно вызвать исключение, если done не является bool."""
+        with pytest.raises(ValueError):
+            tasks.add(Task(summary='summary', done='True'))

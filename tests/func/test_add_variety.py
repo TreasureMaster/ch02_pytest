@@ -19,13 +19,13 @@ def equivalent(t1, t2):
     # Сравнить все, кроме поля id
     return ((t1.summary == t2.summary) and (t1.owner == t2.owner) and (t1.done == t2.done))
 
-
-@pytest.fixture(autouse=True)
-def initialized_tasks_db(tmpdir):
-    """Подключает к БД перед тестированием, отключает после."""
-    tasks.start_tasks_db(str(tmpdir), 'tiny')
-    yield
-    tasks.stop_tasks_db()
+# WARNING данный код вызывает обрушение тестов, т.к. подавляет действие conftest.py
+# @pytest.fixture(autouse=True)
+# def initialized_tasks_db(tmpdir):
+#     """Подключает к БД перед тестированием, отключает после."""
+#     tasks.start_tasks_db(str(tmpdir), 'tiny')
+#     yield
+#     tasks.stop_tasks_db()
 
 
 # Передача списка объектов Task

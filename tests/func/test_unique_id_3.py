@@ -4,16 +4,16 @@ import pytest
 import tasks
 from tasks.api import Task
 
-
-@pytest.fixture(autouse=True)
-def initialized_tasks_db(tmpdir):
-    """Соединение с БД перед тестом, разъединение после."""
-    # Инициализация: старт БД
-    tasks.start_tasks_db(str(tmpdir), 'tiny')
-    # здесь происходит тестирование
-    yield
-    # После тестов: стоп БД
-    tasks.stop_tasks_db()
+# WARNING данный код вызывает обрушение тестов, т.к. подавляет действие conftest.py
+# @pytest.fixture(autouse=True)
+# def initialized_tasks_db(tmpdir):
+#     """Соединение с БД перед тестом, разъединение после."""
+#     # Инициализация: старт БД
+#     tasks.start_tasks_db(str(tmpdir), 'tiny')
+#     # здесь происходит тестирование
+#     yield
+#     # После тестов: стоп БД
+#     tasks.stop_tasks_db()
 
 
 @pytest.mark.skipif(tasks.__version__ < '0.2.0', reason='not supported until version 0.2.0')
