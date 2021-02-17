@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='tasks',
-    version='0.1.4.dev6',
+    version='0.1.4.dev9',
     license='proprietary',
     description='Minimal Projecy Task Manager',
 
@@ -17,7 +17,7 @@ setup(
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
 
-    install_requires=['click==7.1.2', 'tinydb==3.15.1', 'six', 'pytest<5.0.0'],
+    install_requires=['click==7.1.2', 'tinydb==3.15.1', 'six', 'pytest<5.0.0', 'pymongo'],
     extras_require={'mongo': 'pymongo'},
 
     entry_points={

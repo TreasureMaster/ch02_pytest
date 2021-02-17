@@ -58,7 +58,7 @@ class TestAdd():
     """Тесты, связанные с tasks.add()."""
 
     def test_missing_summary(self):
-        """Следует поднять исключение, если параметр summary отсутсвует."""
+        """Следует поднять исключение, если параметр summary отсутствует."""
         with pytest.raises(ValueError):
             tasks.add(Task(owner='bob'))
 

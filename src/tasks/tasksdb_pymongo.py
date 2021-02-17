@@ -27,6 +27,7 @@ class TasksDB_MongoDB():    # noqa: E801
 
     def add(self, task: dict) -> int:
         """Add a task dict to db."""
+        # task['_id'] = self._get_next_task_id()
         return self._db.task_list.insert_one(task).inserted_id
 
     def get(self, task_id: int) -> dict:
@@ -99,3 +100,7 @@ class TasksDB_MongoDB():    # noqa: E801
 def start_tasks_db(db_path: str) -> TasksDB_MongoDB:
     """Connect to db."""
     return TasksDB_MongoDB(db_path)
+
+
+if __name__ == '__main__':
+    print(TasksDB_MongoDB('C:\\Users\\DEUS\\tests\\mongo_db'))
