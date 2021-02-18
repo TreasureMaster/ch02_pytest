@@ -13,6 +13,7 @@ from tasks import __version__
 @click.version_option(version=__version__)
 def tasks_cli():
     """Run the tasks application."""
+    pass
 
 
 @tasks_cli.command(help='add a task')

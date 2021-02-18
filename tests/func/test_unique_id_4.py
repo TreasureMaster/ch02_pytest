@@ -17,7 +17,7 @@ from tasks.api import Task
 #     tasks.stop_tasks_db()
 
 
-@pytest.mark.xfail(tasks.__version__ < '0.2.0', reason='not supported until version 0.2.0')
+@pytest.mark.xfail(tasks.__version__ < '0.3.0', reason='not supported until version 0.3.0')
 def test_unique_id_1():
     """Вызов unique_id() дважды должен возвращать разные числа."""
     id_1 = tasks.unique_id()
