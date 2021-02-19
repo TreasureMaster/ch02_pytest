@@ -44,17 +44,25 @@ class TasksDB_MongoDB():    # noqa: E801
             all = self._db.task_list.find()
         else:
             all = self._db.task_list.find({'owner': owner})
+        all = list(all)
+        # WARNING all - это итератор, тут он опустошается
         for task_dict in all:
             task_dict['id'] = task_dict.pop('_id')
         return all
 
     def count(self) -> int:
         """Return number of tasks in db."""
-        return self._db.task_list.count()
+        return self._db.task_list.estimated_document_count()
+
+    def last_id(self) -> int:
+        """Return last id from db."""
+        if self.count():
+            return self._db.task_list.find_one(sort=[('_id', -1)])['_id']
+        return self.count()
 
     def update(self, task_id: int, task: dict) -> None:
         """Modify task in db with given task_id."""
-        self._db.tasks_list.update_one({'_id': task_id}, task)
+        self._db.task_list.find_one_and_update({'_id': task_id}, {'$set': task})
 
     def delete(self, task_id: int) -> None:
         """Remove a task from db with given task_id."""
@@ -114,15 +122,21 @@ class TasksDB_MongoDB():    # noqa: E801
                 # WARNING вероятно, pymongo где-то создает _id: 1 (можно ли его сбросить ?)
                 # ANSWER вроде сработало! Просто заменяем встроенный _id своим.
                 # self._db.counters.insert_one({'_id': 'tasksid', 'seq': 0})
-                self._reset_task_id()
+                # self._reset_task_id()
+                self._set_last_field()
 
     def _reset_task_id(self) -> None:
         self._db.counters.find_one_and_update({'_id': 'tasksid'},
                                               {'$set': {'seq': 0}})
 
+    def _set_last_field(self) -> None:
+        self._db.counters.find_one_and_update({'_id': 'tasksid'},
+                                              {'$set': {'seq': self.last_id()}})
+
     def _get_next_task_id(self):
         ret = self._db.counters.find_one_and_update({'_id': 'tasksid'},
-                                                    {'$inc': {'seq': 1}})
+                                                    {'$inc': {'seq': 1}},
+                                                    return_document=pymongo.ReturnDocument.AFTER)
         return ret['seq']
 
     def _disconnect(self) -> None:
@@ -135,4 +149,38 @@ def start_tasks_db(db_path: str) -> TasksDB_MongoDB:
 
 
 if __name__ == '__main__':
-    print(TasksDB_MongoDB('C:\\Users\\DEUS\\tests\\mongo_db'))
+    from tasks import Task
+    task = start_tasks_db('C:\\Users\\DEUS\\tests\\mongo_db')
+    print('id на старте (указатель):', task.last_id())
+    # Вставляем 3 записи
+    print('1-e add:', task.add(Task('do something great')._asdict()))
+    print('last id:', task.last_id())
+    print('2-e add:', task.add(Task('repeat', owner='Brian')._asdict()))
+    print('last id:', task.last_id())
+    print('3-e add:', task.add(Task('again and again', owner='Okken')._asdict()))
+    print('last id:', task.last_id())
+    # Вставляем 4-ю запись
+    task_id = (task.add(Task('testing', owner='Brian')._asdict()))
+    print('get id=last:', task.get(task.last_id()))
+    print('count:', task.count())
+    print('Все записи:')
+    for entry in task.list_tasks():
+        print(entry)
+    print('-'*40)
+    print('list_tasks(Brian):', task.list_tasks('Brian'))
+    task.delete(task.last_id())
+    print('count:', task.count())
+    print('После удаления последней записи:')
+    for entry in task.list_tasks():
+        print(entry)
+    print('-'*40)
+    id2 = Task('again and again +', owner='Okken', done=True)._asdict()
+    print('task для update:', id2)
+    task.update(task.last_id(), id2)
+    print('get id=last after update:', task.get(task.last_id()))
+    print('count:', task.count())
+    print('-'*40)
+    for entry in task.list_tasks():
+        print(entry)
+    task.delete_all()
+    task.stop_tasks_db()

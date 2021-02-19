@@ -70,6 +70,13 @@ def count():
         print(c)
 
 
+@tasks_cli.command(name='clear', help='clear database')
+def delete_all():
+    """Remove all tasks from db."""
+    with _tasks_db():
+        tasks.delete_all()
+
+
 @contextmanager
 def _tasks_db():
     config = tasks.config.get_config()
